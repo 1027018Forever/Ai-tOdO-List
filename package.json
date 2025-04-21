@@ -1,0 +1,16 @@
+
+{
+  "name": "ai-todo-list",
+  "version": "1.0.0",
+  "description": "AI-powered todo list with premium features",
+  "main": "app.js",
+  "scripts": {
+    "start": "serve -s .",
+    "install-deps": "npm install serve --save"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "serve": "^14.0.0"
+  }
+}

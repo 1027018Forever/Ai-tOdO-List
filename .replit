@@ -17,4 +17,8 @@ args = "npm install"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
+args = "npm run install-deps"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
 args = "npm start"
