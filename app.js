@@ -2,6 +2,22 @@
 function App() {
     try {
         const [todos, setTodos] = React.useState(() => TodoStorage.loadTodos());
+        const [searchQuery, setSearchQuery] = React.useState('');
+        const [isRefreshing, setIsRefreshing] = React.useState(false);
+        
+        const filteredTodos = React.useMemo(() => {
+            return todos.filter(todo => 
+                todo.text.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }, [todos, searchQuery]);
+
+        const handlePullToRefresh = () => {
+            setIsRefreshing(true);
+            // Simulate refresh
+            setTimeout(() => {
+                setIsRefreshing(false);
+            }, 1000);
+        };
         const [suggestions, setSuggestions] = React.useState([]);
         const [isGeneratingSuggestions, setIsGeneratingSuggestions] = React.useState(false);
         const [points, setPoints] = React.useState(0);
