@@ -1,3 +1,4 @@
+
 function App() {
     try {
         const [todos, setTodos] = React.useState(() => TodoStorage.loadTodos());
@@ -30,27 +31,41 @@ function App() {
             document.documentElement.classList.toggle('dark', colorMode === 'dark');
         }, [colorMode]);
 
+        const colorModeClass = `mode-${colorMode}`;
+        const contrastClass = `contrast-${contrastMode}`;
+        const themeClass = `theme-${currentTheme}`;
+
         const handleUnlockAll = () => {
             setIsPremium(true);
             setUnlockedThemes(Object.keys(themes));
             setUnlockedVoices(aiVoices.map(voice => voice.id));
-            // Here you would integrate with your payment system
             alert('Thank you for purchasing the premium package! All features unlocked.');
         };
 
         const handleUnlockThemes = () => {
             setUnlockedThemes(Object.keys(themes));
-            // Here you would integrate with your payment system
             alert('Thank you! All themes unlocked.');
         };
 
         const handleUnlockVoices = () => {
             setUnlockedVoices(aiVoices.map(voice => voice.id));
-            // Here you would integrate with your payment system
             alert('Thank you! All AI voices unlocked.');
         };
 
-        // ... rest of the existing methods (addTodo, toggleTodo, etc.) remain the same ...
+        const addTodo = (text) => {
+            const newTodo = { id: Date.now(), text, completed: false };
+            setTodos([...todos, newTodo]);
+        };
+
+        const toggleTodo = (id) => {
+            setTodos(todos.map(todo =>
+                todo.id === id ? { ...todo, completed: !todo.completed } : todo
+            ));
+        };
+
+        const deleteTodo = (id) => {
+            setTodos(todos.filter(todo => todo.id !== id));
+        };
 
         return (
             <div 
@@ -74,7 +89,7 @@ function App() {
                             onColorModeChange={setColorMode}
                             onContrastModeChange={setContrastMode}
                         />
-                        {!isPremium && <RewardProgress points={points} nextReward={nextReward} />}
+                        {!isPremium && <RewardProgress points={points} />}
                         <ThemeSelector 
                             currentTheme={currentTheme}
                             unlockedThemes={unlockedThemes}
@@ -91,31 +106,15 @@ function App() {
                             onToggle={toggleTodo}
                             onDelete={deleteTodo}
                         />
-                        <AISuggestions 
-                            onAddSuggestion={generateSuggestions}
-                            isLoading={isGeneratingSuggestions}
-                        />
-                        {suggestions.length > 0 && (
-                            <div className="space-y-2" data-name="suggestions-list">
-                                {suggestions.map((suggestion, index) => (
-                                    <SuggestedTask
-                                        key={index}
-                                        task={suggestion}
-                                        onAdd={addTodo}
-                                    />
-                                ))}
-                            </div>
-                        )}
                     </div>
                 </div>
-                <VoiceInput onVoiceInput={handleVoiceInput} />
             </div>
         );
     } catch (error) {
         console.error('App component error:', error);
-        reportError(error);
         return null;
     }
 }
 
+// Render the app
 ReactDOM.render(<App />, document.getElementById('root'));
